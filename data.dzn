@@ -1,0 +1,79 @@
+%####################################################################%
+%####################################################################%
+%################# DATOS RELACIONADOS CON ADAN ######################%
+%####################################################################%
+%####################################################################%
+
+%TIEMPO INICIAL
+inicio_adan = [10,0];
+
+%TIEMPOS GENERALES
+tiempo_desplazamiento = 30;
+vuelo_sale = [20,0];
+
+%-----------------------------------%
+%-------- HORARIO TINTORERIA -------%
+%-----------------------------------%
+inicio_tintoreria = [9,0];
+inicio_descanso_tintoreria = [13,30];
+final_descanso_tintoreria = [17,0];
+final_tintoreria = [20,30];
+
+duracion_tintoreria = 30;
+
+%-----------------------------------%
+%-------- HORARIO PELUQUERIA -------%
+%-----------------------------------%
+inicio_peluqueria = [12,0];
+inicio_descanso_peluqueria = [14,30];
+final_descanso_peluqueria = [16,30];
+final_peluqueria = [18,30];
+
+duracion_peluqueria = 60;
+
+%-----------------------------------%
+%------ HORARIO RECOGER PAQUETE ----%
+%-----------------------------------%
+inicio_paquete = [14,0];
+inicio_descanso_paquete = [17,0];
+final_descanso_paquete = [18,0];
+final_paquete = [21,30];
+
+duracion_paquete = 30;
+
+%-----------------------------------%
+%----------- HORARIO REGALO --------%
+%-----------------------------------%
+inicio_regalo = [9,0];
+final_regalo = [21,30];
+
+duracion_regalo = 120;
+
+
+%####################################################################%
+%####################################################################%
+%################# DATOS RELACIONADOS CON EVA #######################%
+%####################################################################%
+%####################################################################%
+
+%TIEMPO INICIAL
+inicio_eva = [12,0];
+
+%-----------------------------------%
+%---------- HORARIO VISITA ---------%
+%-----------------------------------%
+inicio_visita = [12,0];
+inicio_descanso_visita= [14,30];
+final_descanso_visita = [17,30];
+final_visita = [19,30];
+
+%-----------------------------------%
+%---------- HORARIO FARMACIA -------%
+%-----------------------------------%
+inicio_farmacia_1 = [12,0];
+final_farmacia_1= [14,30];
+inicio_farmacia_2 = [17,30];
+final_farmacia_2 = [19,30];
+
+duracion_farmacia_1 = 150;
+duracion_farmacia_2 = 120;
