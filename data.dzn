@@ -67,6 +67,8 @@ inicio_descanso_visita= [14,30];
 final_descanso_visita = [17,30];
 final_visita = [19,30];
 
+duracion_visita = 120;
+
 %-----------------------------------%
 %---------- HORARIO FARMACIA -------%
 %-----------------------------------%

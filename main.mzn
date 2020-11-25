@@ -4,8 +4,8 @@ include "data.dzn";
 %======================================================
 % DATOS DE ENTRADA ADAN ===============================
 %======================================================
-% Datos generales
-array [1..2] of var int: inicio_adan;
+% Datos generales                                   
+array [1..2] of var int: inicio_adan;              
 int: tiempo_desplazamiento;
 array [1..2] of var int: vuelo_sale;
 
@@ -35,19 +35,40 @@ array [1..2] of var int: inicio_regalo;
 array [1..2] of var int: final_regalo;
 int: duracion_regalo;
 
-%array [1..2] of var int: ;
-%array [1..2] of var int: ;
-%array [1..2] of var int: ;
+%======================================================
+% DATOS DE ENTRADA EVA ================================
+%======================================================
+% Datos generales
+array [1..2] of var int: inicio_eva;
 
+% Visita
+array [1..2] of var int: inicio_visita;
+array [1..2] of var int: inicio_descanso_visita;
+array [1..2] of var int: final_descanso_visita;
+array [1..2] of var int: final_visita;
+int: duracion_visita;
 
+% Farmacia
+array [1..2] of var int: inicio_farmacia_1;
+array [1..2] of var int: final_farmacia_1;
+array [1..2] of var int: inicio_farmacia_2;
+array [1..2] of var int: final_farmacia_2;
+int: duracion_farmacia_1;
+int: duracion_farmacia_2;
 
-% RESTRICCIONES DE ADAN ===============================
+%######################################################
+% RESTRICCIONES DE ADAN ###############################
+%######################################################
 % Tintoreria
 % constraint (inicio_descanso_tintoreria[0]*60 + inicio_descanso_tintoreria[1])-(inicio_tintoreria[0]*60 + inicio_tintoreria) = duracion_tintoreria; 
 % constraint (inicio_descanso_tintoreria[0]*60 + inicio_descanso_tintoreria[1])-(inicio_tintoreria[0]*60 + inicio_tintoreria) = 30;
-% =====================================================
+
+
+%######################################################
+% RESTRICCIONES DE EVA ###############################
+%######################################################
 
 solve satisfy;
 
 
-output[" ",show(inicio_tintoreria[1])," - ",show(inicio_tintoreria[2])];
+output[" ",show(inicio_tintoreria[1]*60)," - ",show(inicio_tintoreria[2])];
