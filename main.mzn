@@ -5,26 +5,26 @@
 %%   Autores: Alvaro Rodriguez                                                    %%
 %%            Vladyslav Mazurkevych                                               %%
 %%                                                                                %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%     Vamos a utilizar la siguiente formula para la extraccion de las medias     %%      
-%%     horas:                                                                     %%
-%%                              (h - 10)*2 + min/30                               %%
-%%                                                                                %%
-%%    y de esta forma podremos trabajar con inicio en 10:00 y tener un intervalo  %%
-%%    que se mueva en [0..24]                                                     %%
-%%    Ej:   [inicio, fin, duracion] -> [17:30, 19:00, 30]                         %%
-%%          17:30 -> [17,30] -> (17 - 10)*2 + 30/30 = 14 + 1 = 15 medias horas    %%
-%%          19:00 -> [19,00] -> (19 - 10)*2 + 0/30 = 18 + 0 = 18 medias horas     %%
-%%          30    -> 30/30 = 1 medias horas                                       %%
-%%                                                                                %%
-%%          [15,18,1] -> [inicio, fin, duracion] -> Podemos coger valores de      %%
-%%          0..24 por lo que en el constraint debera haber algo que compruebe     %%
-%%          que inicio + duracion <= 18, donde inicio podra tomar todos los       %%
-%%          valores entre 0..24                                                   %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%% INFORMACION ENUNCIADO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%     Vamos a utilizar la siguiente formula para la extraccion de las medias     %%
+%%%%%%%%%%%%%%%     horas:                                                                     %%
+%%%%%%%%%%%%%%%                              (h - 10)*2 + min (donde min puede ser 0 o 1)      %%
+%%%%%%%%%%%%%%%    1 designa una media hora = 30 min                                           %%
+%%%%%%%%%%%%%%%    y de esta forma podremos trabajar con inicio en 10:00 y tener un intervalo  %%
+%%%%%%%%%%%%%%%    que se mueva en [0..24]                                                     %%
+%%%%%%%%%%%%%%%    Ej:   [inicio, fin, duracion] -> [17:30, 19:00, 30]                         %%
+%%%%%%%%%%%%%%%          17:30 -> [17,1] -> (17 - 10)*2 + 1 = 14 + 1 = 15 medias horas         %%
+%%%%%%%%%%%%%%%          19:00 -> [19,0] -> (19 - 10)*2 + 0 = 18 + 0 = 18 medias horas         %%
+%%%%%%%%%%%%%%%          1    -> 1 = 1 medias horas                                            %%
+%%%%%%%%%%%%%%%                                                                                %%
+%%%%%%%%%%%%%%%          [15,18,1] -> [inicio, fin, duracion] -> Podemos coger valores de      %%
+%%%%%%%%%%%%%%%          0..24 por lo que en el constraint debera haber algo que compruebe     %%
+%%%%%%%%%%%%%%%          que inicio + duracion <= 18, donde inicio podra tomar todos los       %%
+%%%%%%%%%%%%%%%          valores entre 0..24                                                   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INFORMACION ENUNCIADO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ADAN Son las 10:00 -> Coger vuelo a las 20:00 Tiene que estar 30 minutos antes.            %%%
 %% 1.Tintoreria [9:00-13:30] [17:00-20:30] 30 min - Restriccion a la hora de inicio y final   %%%
@@ -43,9 +43,14 @@
 
 include "alldifferent.mzn";
 include "data.dzn";
-%======================================================
-% DATOS DE ENTRADA ADAN ===============================
-%======================================================
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ DATOS DE ENTRADA DE FICHERO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+%========================
+%==== ADAN ==============
+%========================
 % Datos generales                                   
 array [1..2] of var int: inicio_adan;              
 int: tiempo_desplazamiento;
@@ -77,9 +82,9 @@ array [1..2] of var int: inicio_regalo;
 array [1..2] of var int: final_regalo;
 int: duracion_regalo;
 
-%======================================================
-% DATOS DE ENTRADA EVA ================================
-%======================================================
+%========================
+%==== EVA ===============
+%========================
 % Datos generales
 array [1..2] of var int: inicio_eva;
 
@@ -98,36 +103,179 @@ array [1..2] of var int: final_farmacia_2;
 int: duracion_farmacia_1;
 int: duracion_farmacia_2;
 
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   DECLARACION DE VARIABLES  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+array[1..7] of var int: inicioA;
+array[1..7] of var int: finalA;
+array[1..5] of var int: inicioE;
+array[1..5] of var int: finalE;
+array[1..7] of var int: duracionA;
+array[1..5] of var int: duracionE;
+var int: desplazamiento;
+var int: empiezaA;
+var int: empiezaE;
+var int: horaVuelo;
+var int: antelacionAeropuerto;
 var 0..24: x;
+var 0..24: y;
+var 0..24: z;
+var 0..24: w;
+var 0..24: v;
+var 0..24: k;
+var int: xA;
+var int: yA;
+var int: zA;
+var int: wA;
+var int: vE;
+var int: kE;
+array[1..4] of var int: horasInicioTareasA;
+array[1..4] of var int: horasFinalTareasA;
+array[1..3] of var int: horasInicioTareasE;
+array[1..3] of var int: horasFinalTareasE;
 
-%######################################################
-% RESTRICCIONES DE ADAN ############################### [inicio, final, duracion]
-%######################################################
-var float: adan_inicio = (inicio_adan[1]-10)*2 + inicio_adan[2]/30; % adan_inicio = 0
-var float: desplazamiento = tiempo_desplazamiento/30;               % desplazamiento = 1 (30 min)
+%============================================================================================================
+%================================= ASIGNACION DE VARIABLES DE ENTRADA A =====================================
+%=================================        VARIABLES DECLARADAS          =====================================
+%============================================================================================================
+inicioA = [ 
+            (inicio_tintoreria[1] - 10) * 2 + inicio_tintoreria[2],
+            (final_descanso_tintoreria[1] - 10) * 2 + final_descanso_tintoreria[2],
+            (inicio_peluqueria[1] - 10) * 2 + inicio_peluqueria[2],
+            (final_descanso_peluqueria[1] - 10) * 2 + final_descanso_peluqueria[2],
+            (inicio_paquete[1] - 10) * 2 + inicio_paquete[2],
+            (final_descanso_paquete[1] - 10) * 2 + final_descanso_paquete[2],
+            (inicio_regalo[1] - 10) * 2 + inicio_regalo[2]
+          ];
 
-% Tintoreria
-array [1..3] of var float: tintoreria_tramo_1 = [(inicio_tintoreria[1]-10)*2 + inicio_tintoreria[2]/30,
-                                                 (inicio_descanso_tintoreria[1]-10)*2 + inicio_descanso_tintoreria[2]/30,
-                                                  duracion_tintoreria/30];
-array [1..3] of var float: tintoreria_tramo_2 = [(final_descanso_tintoreria[1]-10)*2 + final_descanso_tintoreria[2]/30,
-                                                 (final_tintoreria[1]-10)*2 + final_tintoreria[2]/30,
-                                                  duracion_tintoreria/30];
-                                                  
-constraint (x + desplazamiento >= adan_inicio /\ x + tintoreria_tramo_1[3] + desplazamiento <= tintoreria_tramo_1[2]) 
-                                                           \/ 
-           (x + desplazamiento >= tintoreria_tramo_2[1] /\ x + tintoreria_tramo_2[3] + desplazamiento <= tintoreria_tramo_2[2]);   
+finalA = [
+            (inicio_descanso_tintoreria[1] - 10)*2 + (inicio_descanso_tintoreria[2]),
+            (final_tintoreria[1] - 10)*2 + (final_tintoreria[2]),
+            (inicio_descanso_peluqueria[1] - 10)*2 + (inicio_descanso_peluqueria[2]),
+            (final_peluqueria[1] - 10)*2 + (final_peluqueria[2]),
+            (inicio_descanso_paquete[1] - 10)*2 + (inicio_descanso_paquete[2]),
+            (final_paquete[1] - 10)*2 + (final_paquete[2]),
+            (final_regalo[1] - 10)*2 + (final_regalo[2])
+         ];
 
-% Peluqueria                             
+inicioE = [
+            (inicio_visita[1] - 10) * 2 + inicio_visita[2],
+            (final_descanso_visita[1] - 10) * 2 + final_descanso_visita[2],
+            (inicio_farmacia_1[1] - 10) * 2 + inicio_farmacia_1[2],
+            (inicio_farmacia_2[1] - 10) * 2 + inicio_farmacia_2[2],
+            (inicio_regalo[1] - 10) * 2 + inicio_regalo[2]
+          ];
 
-%######################################################
-% RESTRICCIONES DE EVA ################################
-%######################################################
+finalE = [
+          ( inicio_descanso_visita[1] - 10)*2 + (final_descanso_visita[2]),
+          ( final_visita[1] - 10)*2 + ( final_visita[2]),
+          ( final_farmacia_1[1] - 10)*2 + ( final_farmacia_1[2]),
+          ( final_farmacia_2[1] - 10)*2 + ( final_farmacia_2[2]),
+          ( final_regalo[1] - 10)*2 + ( final_regalo[2])
+         ];
+         
+duracionA = [ 
+              duracion_tintoreria,
+              duracion_tintoreria,
+              duracion_peluqueria,
+              duracion_peluqueria,
+              duracion_paquete,
+              duracion_paquete,
+              duracion_regalo,
+            ];
+          
+duracionE = [ 
+              duracion_visita,
+              duracion_visita,
+              duracion_farmacia_1,
+              duracion_farmacia_2,
+              duracion_regalo,
+            ];
+            
+desplazamiento = tiempo_desplazamiento;
+
+empiezaA = (inicio_adan[1] - 10)*2 + (inicio_adan[2]);
+empiezaE = (inicio_eva[1] - 10)*2 + (inicio_eva[2]);
+
+horaVuelo = (vuelo_sale[1] - 10)*2 + (vuelo_sale[2]);
+antelacionAeropuerto = 1;
+
+%============================================================================================================
+%=============================================               ================================================
+%============================================= RESTRICCIONES ================================================
+%=============================================               ================================================
+%============================================================================================================
+%########################
+%#### ADAN ##############
+%########################
+%Tintoreria
+constraint x >= empiezaA /\ x+desplazamiento >= inicioA[1] /\ x + desplazamiento + duracionA[1] <= finalA[1]
+                                                             \/
+           x >= empiezaA /\ x + desplazamiento >= inicioA[2] /\ x + desplazamiento + duracionA[2] <= finalA[2] /\ 
+           x + desplazamiento + duracionA[2] < horaVuelo - antelacionAeropuerto;
+
+%Peluqueria
+constraint y >= empiezaA /\ y + desplazamiento >= inicioA[3] /\ y + desplazamiento <= finalA[3]
+                                                             \/
+           y >= empiezaA /\ y + desplazamiento >= inicioA[4] /\ y + desplazamiento <= finalA[4] /\ 
+           y + desplazamiento + duracionA[4] < horaVuelo - antelacionAeropuerto;
+
+%Paquete
+constraint z >= empiezaA /\ z + desplazamiento >= inicioA[5] /\ z + desplazamiento <= finalA[5]
+                                                             \/
+           z >= empiezaA /\ z + desplazamiento >= inicioA[6] /\ z + desplazamiento <= finalA[6] /\ 
+           z + desplazamiento + duracionA[6] < horaVuelo - antelacionAeropuerto;
+
+%Regalo
+constraint w >= empiezaA /\ w + desplazamiento >= inicioA[7] /\ w + desplazamiento <= finalA[7] /\ 
+           w + desplazamiento + duracionA[7] < horaVuelo - antelacionAeropuerto;
+           
+%########################
+%#### EVA  ##############
+%########################
+%Visita
+constraint v >= empiezaE /\ v + desplazamiento >= inicioE[1] /\ v + desplazamiento + duracionE[1] <= finalE[1]
+                                                             \/
+           v >= empiezaE /\ v + desplazamiento >= inicioE[2] /\ v + desplazamiento + duracionE[2] <= finalE[2];
+
+%Farmacia
+constraint k >= empiezaE /\ k + desplazamiento >= inicioE[3] /\ k + desplazamiento <= finalE[3] /\ k + desplazamiento + duracionE[3] <= finalE[4] 
+                                                               \/
+           k >= empiezaE /\ k + desplazamiento > finalE[3] /\ k + desplazamiento + duracionE[4] <= finalE[4];
+
+%Regalo
+constraint w >= empiezaE /\ w + desplazamiento >= inicioE[5] /\ w + desplazamiento <= finalE[5];  
+
+%########################
+%##### SOLAPES ##########
+%########################
+
+xA = (x + desplazamiento + duracionA[1]);
+yA = (y + desplazamiento + duracionA[3]);
+zA = (z + desplazamiento + duracionA[5]);
+wA = (w + desplazamiento + duracionA[7]);
+horasInicioTareasA = [x,y,z,w];
+horasFinalTareasA = [xA,yA,zA,wA];
+
+vE = (v + desplazamiento + duracionE[1]);
+kE = (k + desplazamiento + duracionE[3]);
+horasInicioTareasE = [v,k,w];
+horasFinalTareasE = [vE,kE,wA];
+
+constraint forall(i,j in 1..4 where i!=j)(horasInicioTareasA[i]!=horasInicioTareasA[j] /\ horasFinalTareasA[i]!=horasFinalTareasA[j]);
+constraint forall(i,j in 1..3 where i!=j)(horasInicioTareasE[i]!=horasInicioTareasE[j] /\ horasFinalTareasE[i]!=horasFinalTareasE[j]);
+%constraint x!=y /\ x!=z /\ x!=w /\ y!=w /\ y!=z /\ z!=w /\ xA!=yA /\ xA!=zA /\ xA!=wA /\ yA!=wA /\ yA!=zA /\ zA!=wA;
+%constraint v!=k /\ v!=w /\ k!=w;
 
 solve satisfy;
-
-
-output[" ","Inicio","\t", "Fin","\t","Duracion", "\n"];
-output[" ",show(tintoreria_tramo_1[1]),"\t", show(tintoreria_tramo_1[2]),"\t",show(tintoreria_tramo_1[3]), "\n"];
-output[" ",show(tintoreria_tramo_2[1]),"\t", show(tintoreria_tramo_2[2]),"\t",show(tintoreria_tramo_2[3]), "\n"];
-output[" ",show(x),"\n"];
+output["ADAN Horas iniciales: ",show(horasInicioTareasA)," Horas finales: ", show(horasFinalTareasA), "\n"];
+output["EVA Horas iniciales: ",show(horasInicioTareasE)," Horas finales: ", show(horasFinalTareasE), "\n"];
+output[" x:",show(x),"\t"," y:",show(y),"\t"," z:",show(z),"\t"," w:",show(w),"\n\n"];
+output[" v:",show(v),"\t"," k:",show(y),"\t"," w:",show(w),"\n\n"];
+output["HORARIO ADAN","\n"];
+output["\tTarea" ++ show(i) ++ ":" ++ (show(horasInicioTareasA[i]/2 + 10) ++ "-" ++ show(horasFinalTareasA[i]/2 + 10) ++ "\n") | i in 1..4];
+output["\n"];
+output["HORARIO EVA","\n"];
+output["\tTarea" ++ show(i) ++ ":" ++ (show(horasInicioTareasE[i]/2 + 10) ++ "-" ++ show(horasFinalTareasE[i]/2 + 10) ++ "\n") | i in 1..3];

@@ -1,3 +1,10 @@
+%=====================================================================
+%====       LAS HORAS SE REPRESENTAN DE LA SIGUIENTE FORMA        ====
+%====                        15:30 => [15,1]                      ====
+%====                        19:00 => [19,0]                      ====
+%====              Donde 0 indica que no hay media hora           ====
+%====                y 1 indica que si hay media hora             ====               
+%=====================================================================
 %####################################################################%
 %####################################################################%
 %################# DATOS RELACIONADOS CON ADAN ######################%
@@ -8,28 +15,28 @@
 inicio_adan = [10,0];
 
 %TIEMPOS GENERALES
-tiempo_desplazamiento = 30;
+tiempo_desplazamiento = 1; %1 media hora = 30 min
 vuelo_sale = [20,0];
 
 %-----------------------------------%
 %-------- HORARIO TINTORERIA -------%
 %-----------------------------------%
 inicio_tintoreria = [9,0];
-inicio_descanso_tintoreria = [13,30];
+inicio_descanso_tintoreria = [13,1];
 final_descanso_tintoreria = [17,0];
-final_tintoreria = [20,30];
+final_tintoreria = [20,1];
 
-duracion_tintoreria = 30;
+duracion_tintoreria = 1; %1 media hora = 30 min
 
 %-----------------------------------%
 %-------- HORARIO PELUQUERIA -------%
 %-----------------------------------%
 inicio_peluqueria = [12,0];
-inicio_descanso_peluqueria = [14,30];
-final_descanso_peluqueria = [16,30];
-final_peluqueria = [18,30];
+inicio_descanso_peluqueria = [14,1];
+final_descanso_peluqueria = [16,1];
+final_peluqueria = [18,1];
 
-duracion_peluqueria = 60;
+duracion_peluqueria = 2; %2 medias horas = 60 min
 
 %-----------------------------------%
 %------ HORARIO RECOGER PAQUETE ----%
@@ -37,17 +44,17 @@ duracion_peluqueria = 60;
 inicio_paquete = [14,0];
 inicio_descanso_paquete = [17,0];
 final_descanso_paquete = [18,0];
-final_paquete = [21,30];
+final_paquete = [21,1];
 
-duracion_paquete = 30;
+duracion_paquete = 1; %1 media hora = 30 min
 
 %-----------------------------------%
 %----------- HORARIO REGALO --------%
 %-----------------------------------%
 inicio_regalo = [9,0];
-final_regalo = [21,30];
+final_regalo = [21,1];
 
-duracion_regalo = 120;
+duracion_regalo = 4; %4 medias horas = 120 min
 
 
 %####################################################################%
@@ -63,19 +70,19 @@ inicio_eva = [12,0];
 %---------- HORARIO VISITA ---------%
 %-----------------------------------%
 inicio_visita = [12,0];
-inicio_descanso_visita= [14,30];
-final_descanso_visita = [17,30];
-final_visita = [19,30];
+inicio_descanso_visita= [14,1];
+final_descanso_visita = [17,1];
+final_visita = [19,1];
 
-duracion_visita = 120;
+duracion_visita = 4; %4 medias horas = 120 min
 
 %-----------------------------------%
 %---------- HORARIO FARMACIA -------%
 %-----------------------------------%
 inicio_farmacia_1 = [12,0];
-final_farmacia_1= [14,30];
-inicio_farmacia_2 = [17,30];
-final_farmacia_2 = [19,30];
+final_farmacia_1= [17,0];
+inicio_farmacia_2 = [17,0];
+final_farmacia_2 = [19,1];
 
-duracion_farmacia_1 = 150;
-duracion_farmacia_2 = 120;
+duracion_farmacia_1 = 5; %5 medias horas = 150 min
+duracion_farmacia_2 = 5; %4 medias horas = 120 min
