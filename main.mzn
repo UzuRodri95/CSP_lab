@@ -241,9 +241,7 @@ constraint v >= empiezaE /\ v + desplazamiento >= inicioE[1] /\ v + desplazamien
            v >= empiezaE /\ v + desplazamiento >= inicioE[2] /\ v + desplazamiento + duracionE[2] <= finalE[2];
 
 %Farmacia
-constraint k >= empiezaE /\ k + desplazamiento >= inicioE[3] /\ k + desplazamiento <= finalE[3] /\ k + desplazamiento + duracionE[3] <= finalE[4] 
-                                                               \/
-           k >= empiezaE /\ k + desplazamiento > finalE[3] /\ k + desplazamiento + duracionE[4] <= finalE[4];
+constraint if k + desplazamiento <= finalE[3] then kE = (k + desplazamiento + duracionE[3]) else kE = (k + desplazamiento + duracionE[4]) endif;
 
 %Regalo
 constraint w >= empiezaE /\ w + desplazamiento >= inicioE[5] /\ w + desplazamiento <= finalE[5];  
@@ -252,28 +250,39 @@ constraint w >= empiezaE /\ w + desplazamiento >= inicioE[5] /\ w + desplazamien
 %##### SOLAPES ##########
 %########################
 
-xA = (x + desplazamiento + duracionA[1]);
-yA = (y + desplazamiento + duracionA[3]);
-zA = (z + desplazamiento + duracionA[5]);
-wA = (w + desplazamiento + duracionA[7]);
+xA = (x + duracionA[1]);
+yA = (y + duracionA[3]);
+zA = (z + duracionA[5]);
+wA = (w + duracionA[7]);
 horasInicioTareasA = [x,y,z,w];
 horasFinalTareasA = [xA,yA,zA,wA];
 
-vE = (v + desplazamiento + duracionE[1]);
-kE = (k + desplazamiento + duracionE[3]);
+vE = (v + duracionE[1]);
+%kE
 horasInicioTareasE = [v,k,w];
 horasFinalTareasE = [vE,kE,wA];
 
-constraint forall(i,j in 1..4 where i!=j)(horasInicioTareasA[i]!=horasInicioTareasA[j] /\ horasFinalTareasA[i]!=horasFinalTareasA[j]);
-constraint forall(i,j in 1..3 where i!=j)(horasInicioTareasE[i]!=horasInicioTareasE[j] /\ horasFinalTareasE[i]!=horasFinalTareasE[j]);
-%constraint x!=y /\ x!=z /\ x!=w /\ y!=w /\ y!=z /\ z!=w /\ xA!=yA /\ xA!=zA /\ xA!=wA /\ yA!=wA /\ yA!=zA /\ zA!=wA;
-%constraint v!=k /\ v!=w /\ k!=w;
 
+constraint forall(i,j in 1..4 where i!=j)(horasInicioTareasA[i]>=horasFinalTareasA[j] + desplazamiento \/ horasFinalTareasA[i]<=horasInicioTareasA[j] - desplazamiento);
+constraint forall(i,j in 1..3 where i!=j)(horasInicioTareasE[i]>=horasFinalTareasE[j] + desplazamiento \/ horasFinalTareasE[i]<=horasInicioTareasE[j] - desplazamiento); 
+
+%Ejercicio 1 - Obtener los tiempos de inicio y final para cada una de las tareas de Adán y de Eva, las horas de salida
+%y llegada a casa de Eva, la hora de salida de casa de Adán y la hora de llegada al aeropuerto. Obtener algunos resultados factibles.
 solve satisfy;
-output["ADAN Horas iniciales: ",show(horasInicioTareasA)," Horas finales: ", show(horasFinalTareasA), "\n"];
-output["EVA Horas iniciales: ",show(horasInicioTareasE)," Horas finales: ", show(horasFinalTareasE), "\n"];
-output[" x:",show(x),"\t"," y:",show(y),"\t"," z:",show(z),"\t"," w:",show(w),"\n\n"];
-output[" v:",show(v),"\t"," k:",show(y),"\t"," w:",show(w),"\n\n"];
+
+%Ejercicio 2 - ¿Cuál es la máxima holgura que puede tener Adán respecto a su llegada al aeropuerto y salida del vuelo? Obtened la asignación de tiempos de las tareas.
+%solve minimize y;
+
+%Ejercicio 3 - ¿Cuál es la hora más temprana que puede volver Eva a casa?. Obtened la asignación de tiempos de las tareas.
+%solve minimize k;
+
+%Ejercicio 4 - ¿Cuál es la hora más tardía en la que Adán puede salir de casa?. Obtened la asignación de tiempos de las tareas.
+%solve maximize x;
+
+%Ejercicio 5 - ¿Es posible que Eva acabe la vista a la amiga 4 horas antes, al menos, que Adán entre en la peluquería? ¿Y almenos, 5 horas antes?
+%constraint  v + desplazamiento + duracionE[1] + 8 < y;
+%constraint  v + desplazamiento + duracionE[1] + 10 < y;
+
 output["HORARIO ADAN","\n"];
 output["\tTarea" ++ show(i) ++ ":" ++ (show(horasInicioTareasA[i]/2 + 10) ++ "-" ++ show(horasFinalTareasA[i]/2 + 10) ++ "\n") | i in 1..4];
 output["\n"];

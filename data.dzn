@@ -82,7 +82,7 @@ duracion_visita = 4; %4 medias horas = 120 min
 inicio_farmacia_1 = [12,0];
 final_farmacia_1= [17,0];
 inicio_farmacia_2 = [17,0];
-final_farmacia_2 = [19,1];
+final_farmacia_2 = [22,0];
 
 duracion_farmacia_1 = 5; %5 medias horas = 150 min
-duracion_farmacia_2 = 5; %4 medias horas = 120 min
+duracion_farmacia_2 = 4; %4 medias horas = 120 min
