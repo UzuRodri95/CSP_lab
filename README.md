@@ -1,2 +1,2 @@
 # CSP_lab
-CSP based on MiniZink IDE
+CSP based on MiniZinc IDE
