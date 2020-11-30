@@ -30,7 +30,7 @@
 %% 1.Tintoreria [9:00-13:30] [17:00-20:30] 30 min - Restriccion a la hora de inicio y final   %%%
 %% 2.Peluqueria [12:00-14:30][16:30-18:30] 60 min - Restriccion a la hora de llegada          %%%
 %% 3.Paquete    [14:00-17:00][18:00-21:30] 30 min - Restriccion a la hora de llegada          %%%
-%% 4.Regalo     [9:00-21:00]		120 min - Restriccion a la hora de llegada                       %%% 
+%% 4.Regalo     [9:00-21:00]		120 min - Restriccion a la hora de llegada                      %%%
 %%                                                                                            %%%
 %% EVA Son las 12:00                                                                          %%%
 %% 1.Farmacia [ir<17:00 -> 2 h 30 min] OR [ir>17:00 -> 2 h 0 min]                             %%%
@@ -135,6 +135,9 @@ array[1..4] of var int: horasInicioTareasA;
 array[1..4] of var int: horasFinalTareasA;
 array[1..3] of var int: horasInicioTareasE;
 array[1..3] of var int: horasFinalTareasE;
+var 0..24: holgura;
+var int: horaUltimaTareaAdan;
+var 0..24: horaTempranaLlegarCasaE;
 
 %============================================================================================================
 %================================= ASIGNACION DE VARIABLES DE ENTRADA A =====================================
@@ -254,6 +257,7 @@ xA = (x + duracionA[1]);
 yA = (y + duracionA[3]);
 zA = (z + duracionA[5]);
 wA = (w + duracionA[7]);
+
 horasInicioTareasA = [x,y,z,w];
 horasFinalTareasA = [xA,yA,zA,wA];
 
@@ -263,18 +267,25 @@ horasInicioTareasE = [v,k,w];
 horasFinalTareasE = [vE,kE,wA];
 
 
+
 constraint forall(i,j in 1..4 where i!=j)(horasInicioTareasA[i]>=horasFinalTareasA[j] + desplazamiento \/ horasFinalTareasA[i]<=horasInicioTareasA[j] - desplazamiento);
 constraint forall(i,j in 1..3 where i!=j)(horasInicioTareasE[i]>=horasFinalTareasE[j] + desplazamiento \/ horasFinalTareasE[i]<=horasInicioTareasE[j] - desplazamiento); 
+
 
 %Ejercicio 1 - Obtener los tiempos de inicio y final para cada una de las tareas de Adán y de Eva, las horas de salida
 %y llegada a casa de Eva, la hora de salida de casa de Adán y la hora de llegada al aeropuerto. Obtener algunos resultados factibles.
 solve satisfy;
 
 %Ejercicio 2 - ¿Cuál es la máxima holgura que puede tener Adán respecto a su llegada al aeropuerto y salida del vuelo? Obtened la asignación de tiempos de las tareas.
-%solve minimize y;
+horaUltimaTareaAdan = max(horasFinalTareasA);
+holgura = 20 - horaUltimaTareaAdan;
+constraint holgura >= 1;
+%solve maximize holgura;
 
 %Ejercicio 3 - ¿Cuál es la hora más temprana que puede volver Eva a casa?. Obtened la asignación de tiempos de las tareas.
 %solve minimize k;
+horaTempranaLlegarCasaE= max(horasFinalTareasE);
+%solve minimize horaTempranaLlegarCasaE;
 
 %Ejercicio 4 - ¿Cuál es la hora más tardía en la que Adán puede salir de casa?. Obtened la asignación de tiempos de las tareas.
 %solve maximize x;
@@ -288,3 +299,6 @@ output["\tTarea" ++ show(i) ++ ":" ++ (show(horasInicioTareasA[i]/2 + 10) ++ "-"
 output["\n"];
 output["HORARIO EVA","\n"];
 output["\tTarea" ++ show(i) ++ ":" ++ (show(horasInicioTareasE[i]/2 + 10) ++ "-" ++ show(horasFinalTareasE[i]/2 + 10) ++ "\n") | i in 1..3];
+output["\n Holgura: " ++ show(holgura) ++ " medias horas que son " ++ show(holgura/2) ++ " horas\n"];
+output["\n Horas finales Adan: ", show(horasFinalTareasA)," Ultima hora: ", show(horaUltimaTareaAdan), "\n"];
+output["Horas finales Eva: ", show(horasFinalTareasE)," Ultima hora: ", show(horaTempranaLlegarCasaE), "\n"];
