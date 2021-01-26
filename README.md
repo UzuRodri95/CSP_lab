@@ -1,2 +1,2 @@
-# CSP_lab
-CSP based on MiniZinc IDE
+#SchedulePlanner
+Schedule planner .CSP based on MiniZinc IDE.
